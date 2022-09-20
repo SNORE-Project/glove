@@ -1,4 +1,6 @@
-## Edit this project ![Build status badge](https://github.com/spartan2909/wristwatch/workflows/MakeCode/badge.svg)
+# Wristwatch [![test result](https://img.shields.io/github/workflow/status/SNORE-Project/wristwatch/CI?label=tests&logo=typescript)](https://github.com/SNORE-Project/wristwatch/actions/workflows/CI.yml)
+
+## Edit this project
 
 To edit this repository in MakeCode.
 
