@@ -1,5 +1,5 @@
 radio.setGroup(0);
-loops.everyInterval(100, snore.recordVol);
-loops.everyInterval(100, snore.recordAccel);
+loops.everyInterval(200, snore.recordVol);
+loops.everyInterval(200, snore.recordAccel);
 loops.everyInterval(10, snore.recordBP);
-loops.everyInterval(100, snore.sendData);
+loops.everyInterval(200, snore.sendData);
