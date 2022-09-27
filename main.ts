@@ -35,4 +35,4 @@ loops.everyInterval(snore.intervalSize, () => {
     }
     });
 
-loops.everyInterval(snore.intervalSize, () => {if (active){snore.sendData()}});
+loops.everyInterval(snore.bpMeasuresPerInterval, () => {if (active){snore.recordBP()}});
