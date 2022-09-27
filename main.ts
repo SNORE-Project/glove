@@ -1,11 +1,33 @@
 radio.setGroup(0);
 let active = false;
+let statusLed = true;
 
-input.onButtonPressed(Button.A, function() {
+const setLed = () => {
+    if (active && statusLed) {
+        led.plot(0,0);
+    } else {
+        led.unplot(0,0);
+    }
+}
+
+input.onButtonPressed(Button.A, () => {
     active = !active;
-})
+    setLed();
+    if (active) {
+        basic.showString("On");
+    } else {
+        basic.showString("Off");
+    }
+});
 
-loops.everyInterval(200, () => {
+input.onButtonPressed(Button.B, () => {
+    statusLed = !statusLed;
+    led.plot(0, 0);
+    basic.pause(1000);
+    setLed();
+});
+
+loops.everyInterval(snore.intervalSize, () => {
     if (active) {
         snore.recordVol();
         snore.recordAccel();
@@ -13,4 +35,4 @@ loops.everyInterval(200, () => {
     }
     });
 
-loops.everyInterval(200, () => {if (active){snore.sendData}});
+loops.everyInterval(snore.intervalSize, () => {if (active){snore.sendData()}});
