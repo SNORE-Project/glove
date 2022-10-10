@@ -1,6 +1,7 @@
 radio.setGroup(0);
 let active = false;
 let statusLed = true;
+let time = 0;
 
 const setLed = () => {
     if (active && statusLed) {
@@ -27,12 +28,15 @@ input.onButtonPressed(Button.B, () => {
     setLed();
 });
 
-loops.everyInterval(snore.intervalSize, () => {
+loops.everyInterval(snore.intervalSize / snore.bpMeasuresPerInterval, () => {
     if (active) {
-        snore.recordVol();
-        snore.recordAccel();
-        snore.sendData();
+        time += snore.intervalSize / snore.bpMeasuresPerInterval
+        snore.recordBP();
+        if (time == snore.intervalSize) {
+            snore.recordVol();
+            snore.recordAccel();
+            snore.sendData();
+            time = 0;
+        }
     }
-    });
-
-loops.everyInterval(snore.intervalSize / snore.bpMeasuresPerInterval, () => {if (active){snore.recordBP()}});
+});
