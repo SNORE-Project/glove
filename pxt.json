@@ -5,7 +5,7 @@
         "core": "*",
         "radio": "*",
         "microphone": "*",
-        "snore library": "github:SNORE-Project/pxt-snore#v1.1.0"
+        "snore library": "github:SNORE-Project/pxt-snore#v1.1.1"
     },
     "files": [
         "main.ts",
