@@ -1,4 +1,4 @@
-# Wristwatch [![test result](https://img.shields.io/github/workflow/status/SNORE-Project/wristwatch/CI?label=tests&logo=typescript)](https://github.com/SNORE-Project/wristwatch/actions/workflows/CI.yml)
+# Wristwatch [![test result](https://img.shields.io/github/actions/workflow/status/SNORE-Project/wristwatch/CI.yml?label=tests&logo=typescript)](https://github.com/SNORE-Project/wristwatch/actions/workflows/CI.yml)
 
 ## Edit this project
 
