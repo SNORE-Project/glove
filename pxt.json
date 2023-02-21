@@ -4,8 +4,7 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*",
-        "snore library": "github:SNORE-Project/pxt-snore#v1.3.0"
+        "microphone": "*"
     },
     "files": [
         "main.ts",
