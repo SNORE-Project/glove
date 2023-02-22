@@ -20,9 +20,9 @@ basic.forever(() => {
 
 function motion_magnitude() {
     return Math.sqrt(
-        (1000 - input.acceleration(Dimension.X)) ** 2 +
-        (1000 - input.acceleration(Dimension.Y)) ** 2 +
-        (1000 - input.acceleration(Dimension.Z)) ** 2
+        (1000 - Math.abs(input.acceleration(Dimension.X))) ** 2 +
+        (1000 - Math.abs(input.acceleration(Dimension.Y))) ** 2 +
+        (1000 - Math.abs(input.acceleration(Dimension.Z))) ** 2
     );
 }
 
@@ -34,9 +34,11 @@ basic.forever(() => {
         counter = 1;
         pulse_out = (60000 - 60000 % delta_t) / delta_t;
 
+        let motion = motion_magnitude();
         radio.sendValue("pulse", pulse_out);
         radio.sendValue("time", time1);
-        radio.sendValue("movement", motion_magnitude())
+        //radio.sendValue("movement", motion >= 1200 ? 1 : 0);
+        radio.sendValue("movement", motion);
     } else if (pulse_data <= 430 && counter == 1) {
         counter = 0;
     }
