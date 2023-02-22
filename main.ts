@@ -19,11 +19,11 @@ basic.forever(() => {
 });
 
 function motion_magnitude() {
-    return Math.sqrt(
-        (1000 - Math.abs(input.acceleration(Dimension.X))) ** 2 +
-        (1000 - Math.abs(input.acceleration(Dimension.Y))) ** 2 +
-        (1000 - Math.abs(input.acceleration(Dimension.Z))) ** 2
-    );
+    return Math.abs(Math.sqrt(
+        input.acceleration(Dimension.X) ** 2 +
+        input.acceleration(Dimension.Y) ** 2 +
+        input.acceleration(Dimension.Z) ** 2
+    ) - 1024);
 }
 
 basic.forever(() => {
@@ -37,8 +37,8 @@ basic.forever(() => {
         let motion = motion_magnitude();
         radio.sendValue("pulse", pulse_out);
         radio.sendValue("time", time1);
-        //radio.sendValue("movement", motion >= 1200 ? 1 : 0);
-        radio.sendValue("movement", motion);
+        radio.sendValue("movement", motion >= 70 ? 1 : 0);
+        radio.sendValue("movement_raw", motion);
     } else if (pulse_data <= 430 && counter == 1) {
         counter = 0;
     }
