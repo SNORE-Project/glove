@@ -7,19 +7,39 @@ let counter = 0;
 let stable_peak = 0;
 let running_peak = 0;
 let time_start = 0;
-let registered = false;
+let registered = 0;
 radio.setGroup(0);
 
 basic.forever(() => {
     pulse_data = pins.analogReadPin(AnalogPin.P0);
 });
 
-basic.forever(() => {
-    serial.writeValue("Pulse Diagram", pulse_data);
-});
+// basic.forever(() => {
+//     serial.writeValue("Pulse Diagram", pulse_data);
+// });
+
+// basic.forever(() => {
+//     serial.writeValue("Current Pulse", pulse_out);
+// });
+
+// basic.forever(() => {
+//     serial.writeValue("Stable Threshold", stable_peak)
+// });
+
+// basic.forever(() => {
+//     serial.writeValue("Running Peak", running_peak)
+// });
 
 basic.forever(() => {
-    serial.writeValue("Current Pulse", pulse_out);
+    if (pulse_data > running_peak){
+        running_peak = pulse_data;
+        time_start = input.runningTime();
+    } else if (input.runningTime() - time_start > 2 * delta_t && registered == 0) {
+        running_peak = 0
+    } else if (pulse_data < running_peak && running_peak > 600){
+        stable_peak = running_peak
+    } 
+    
 });
 
 function motion_magnitude() {
@@ -31,27 +51,16 @@ function motion_magnitude() {
 }
 
 /*
-    Constantly scan for the peak of the current spike. 
-    If another spike is detected within -20% of that range then that's another pulse. 
-    If another spike isn't detected for 2*delta_t of previously recorded pulse, 
-    reset what range we're looking for. 
+    be constantly scanning for the peak of the current spike
+    if another spike is detected within -20% of that range then that's another pulse
+    if another spike isn't detected for 2*delta_t of previously recorded Pulse
+    reset what range we're looking for
 */
 
 basic.forever(() => {
-    if (pulse_data > running_peak) {
-        running_peak = pulse_data;
-        time_start = input.runningTime();
-    } else if (input.runningTime() - time_start > 2 * delta_t && !registered) {
-        running_peak = 0
-    } else if (pulse_data < running_peak) {
-        stable_peak = running_peak
-    }
-});
-
-basic.forever(() => {
-    registered = false;
-    if (pulse_data > stable_peak * 0.8 && counter == 0) {
-        registered = true;
+    registered = 0;
+    if (pulse_data > (stable_peak * 0.65) && counter == 0) {
+        registered = 1;
         time2 = input.runningTime();
         delta_t = time2 - time1;
         time1 = time2;
