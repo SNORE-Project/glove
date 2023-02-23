@@ -51,7 +51,7 @@ function motion_magnitude() {
 
 basic.forever(() => {
     registered = 0;
-    if (pulse_data > (stable_peak - (stable_peak * 0.2)) && counter == 0) {
+    if (pulse_data > (stable_peak * 0.8) && counter == 0) {
         registered = 1;
         time2 = input.runningTime();
         delta_t = time2 - time1;
