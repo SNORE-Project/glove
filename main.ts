@@ -38,7 +38,7 @@ basic.forever(() => {
         radio.sendValue("pulse", pulse_out);
         radio.sendValue("time", time1);
         radio.sendValue("movement", motion >= 70 ? 1 : 0);
-        radio.sendValue("movement_raw", motion);
+        radio.sendValue("raw_mvmt", motion);
     } else if (pulse_data <= 430 && counter == 1) {
         counter = 0;
     }
