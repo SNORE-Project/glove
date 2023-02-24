@@ -39,10 +39,10 @@ function motion_magnitude() {
 }
 
 /*
-    be constantly scanning for the peak of the current spike
-    if another spike is detected within -20% of that range then that's another pulse
-    if another spike isn't detected for 2*delta_t of previously recorded Pulse
-    reset what range we're looking for
+    Constantly scan for the peak of the current spike.
+    If another spike is detected within -20% of that range then that's another pulse.
+    If another spike isn't detected for 2*delta_t of previously recorded pulse,
+    reset what range we're looking for.
 */
 
 basic.forever(() => {
