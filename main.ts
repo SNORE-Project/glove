@@ -65,11 +65,11 @@ basic.forever(() => {
         delta_t = time2 - time1;
         time1 = time2;
         counter = 1;
-        pulse_out = (60000 - 60000 % delta_t) / delta_t;
+        pulse_out = Math.floor(60000 / delta_t);
 
         let motion = motion_magnitude();
         radio.sendValue("pulse", pulse_out);
-        radio.sendValue("time", time1);
+        radio.sendValue("time", Math.floor(time1 / 60000));
         radio.sendValue("movement", motion >= 70 ? 1 : 0);
         radio.sendValue("raw_mvmt", motion);
     } else if (pulse_data <= 430 && counter == 1) {
