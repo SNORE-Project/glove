@@ -50,7 +50,7 @@ basic.forever(() => {
         running_peak = pulse_data;
         time_start = input.runningTime();
     } else if (input.runningTime() - time_start > 2 * delta_t && !registered) {
-        running_peak = 0
+        running_peak = 600
     } else if (pulse_data < running_peak && running_peak > 600) {
         stable_peak = running_peak
     } 
