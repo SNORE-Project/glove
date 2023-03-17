@@ -3,6 +3,8 @@ const STABLE_SET_THRESHOLD = 600;
 const PEAK_REGISTER_RATIO = 0.65;
 const MOVEMENT_THRESHOLD = 70;
 
+radio.setGroup(0);
+
 let time1 = 0;
 let delta_t = 0;
 let time2 = 0;
@@ -13,27 +15,19 @@ let stable_peak = 0;
 let running_peak = 0;
 let time_start = 0;
 let registered = false;
-radio.setGroup(0);
 
 basic.forever(() => {
     pulse_data = pins.analogReadPin(AnalogPin.P0);
 });
 
-// basic.forever(() => {
-//     serial.writeValue("Pulse Diagram", pulse_data);
-// });
-
-// basic.forever(() => {
-//     serial.writeValue("Current Pulse", pulse_out);
-// });
-
-// basic.forever(() => {
-//     serial.writeValue("Stable Threshold", stable_peak)
-// });
-
-// basic.forever(() => {
-//     serial.writeValue("Running Peak", running_peak)
-// });
+/*
+basic.forever(() => {
+    serial.writeValue("Pulse Diagram", pulse_data);
+    serial.writeValue("Current Pulse", pulse_out);
+    serial.writeValue("Stable Threshold", stable_peak);
+    serial.writeValue("Running Peak", running_peak);
+});
+*/
 
 function motion_magnitude() {
     return Math.abs(Math.sqrt(
@@ -55,11 +49,10 @@ basic.forever(() => {
         running_peak = pulse_data;
         time_start = input.runningTime();
     } else if (input.runningTime() - time_start > 2 * delta_t && !registered) {
-        running_peak = STABLE_SET_THRESHOLD
+        running_peak = STABLE_SET_THRESHOLD;
     } else if (pulse_data < running_peak && running_peak > STABLE_SET_THRESHOLD) {
-        stable_peak = running_peak
-    } 
-    
+        stable_peak = running_peak;
+    }
 });
 
 basic.forever(() => {
