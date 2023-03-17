@@ -1,3 +1,8 @@
+const LOWER_BOUND = 430;
+const STABLE_SET_THRESHOLD = 600;
+const PEAK_REGISTER_RATIO = 0.65;
+const MOVEMENT_THRESHOLD = 70;
+
 let time1 = 0;
 let delta_t = 0;
 let time2 = 0;
@@ -50,8 +55,8 @@ basic.forever(() => {
         running_peak = pulse_data;
         time_start = input.runningTime();
     } else if (input.runningTime() - time_start > 2 * delta_t && !registered) {
-        running_peak = 600
-    } else if (pulse_data < running_peak && running_peak > 600) {
+        running_peak = STABLE_SET_THRESHOLD
+    } else if (pulse_data < running_peak && running_peak > STABLE_SET_THRESHOLD) {
         stable_peak = running_peak
     } 
     
@@ -59,7 +64,7 @@ basic.forever(() => {
 
 basic.forever(() => {
     registered = false;
-    if (pulse_data > (stable_peak * 0.65) && counter == 0) {
+    if (pulse_data > (stable_peak * PEAK_REGISTER_RATIO) && counter == 0) {
         registered = true;
         time2 = input.runningTime();
         delta_t = time2 - time1;
@@ -70,9 +75,9 @@ basic.forever(() => {
         let motion = motion_magnitude();
         radio.sendValue("pulse", pulse_out);
         radio.sendValue("time", Math.floor(time1 / 60000));
-        radio.sendValue("movement", motion >= 70 ? 1 : 0);
+        radio.sendValue("movement", motion >= MOVEMENT_THRESHOLD ? 1 : 0);
         radio.sendValue("raw_mvmt", motion);
-    } else if (pulse_data <= 430 && counter == 1) {
+    } else if (pulse_data <= LOWER_BOUND && counter == 1) {
         counter = 0;
     }
 });
