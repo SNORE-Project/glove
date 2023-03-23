@@ -58,5 +58,3 @@ basic.forever(() => {
         counter = 0;
     }
 });
-
-});
