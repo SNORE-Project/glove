@@ -1,7 +1,7 @@
-const LOWER_BOUND = 430;
-const STABLE_SET_THRESHOLD = 600;
-const PEAK_REGISTER_RATIO = 0.65;
+const LOWER_BOUND = 470;
+const PEAK_REGISTER_RATIO = 0.20;
 const MOVEMENT_THRESHOLD = 70;
+const AVERAGE_MULTIPLIER = 0.01;
 
 radio.setGroup(0);
 
@@ -11,19 +11,19 @@ let time2 = 0;
 let pulse_data = 0;
 let pulse_out = 0;
 let counter = 0;
-let stable_peak = 0;
-let running_peak = 0;
-let time_start = 0;
-let registered = false;
+let average = 0;
+let motion;
 
 basic.forever(() => {
     pulse_data = pins.analogReadPin(AnalogPin.P0);
+    average = (pulse_data * AVERAGE_MULTIPLIER) + ((1 - AVERAGE_MULTIPLIER) * average);
 });
 
 /*
 basic.forever(() => {
     serial.writeValue("Pulse Diagram", pulse_data);
     serial.writeValue("Current Pulse", pulse_out);
+    serial.writeValue("Moving Average", average);
     serial.writeValue("Stable Threshold", stable_peak);
     serial.writeValue("Running Peak", running_peak);
 });
@@ -37,39 +37,23 @@ function motion_magnitude() {
     ) - 1024);
 }
 
-/*
-    Constantly scan for the peak of the current spike.
-    If another spike is detected within -20% of that range then that's another pulse.
-    If another spike isn't detected for 2*delta_t of previously recorded pulse,
-    reset what range we're looking for.
-*/
 
 basic.forever(() => {
-    if (pulse_data > running_peak) {
-        running_peak = pulse_data;
-        time_start = input.runningTime();
-    } else if (input.runningTime() - time_start > 2 * delta_t && !registered) {
-        running_peak = STABLE_SET_THRESHOLD;
-    } else if (pulse_data < running_peak && running_peak > STABLE_SET_THRESHOLD) {
-        stable_peak = running_peak;
-    }
-});
-
-basic.forever(() => {
-    registered = false;
-    if (pulse_data > (stable_peak * PEAK_REGISTER_RATIO) && counter == 0) {
-        registered = true;
+    if (pulse_data > (average + (average * PEAK_REGISTER_RATIO)) && counter == 0) {
         time2 = input.runningTime();
         delta_t = time2 - time1;
         time1 = time2;
-        counter = 1;
         pulse_out = Math.floor(60000 / delta_t);
+        
+        // send data to remote
+        motion = motion_magnitude();
 
-        let motion = motion_magnitude();
         radio.sendValue("pulse", pulse_out);
         radio.sendValue("time", Math.floor(time1 / 60000));
         radio.sendValue("movement", motion >= MOVEMENT_THRESHOLD ? 1 : 0);
         radio.sendValue("raw_mvmt", motion);
+
+        counter = 1;
     } else if (pulse_data <= LOWER_BOUND && counter == 1) {
         counter = 0;
     }
