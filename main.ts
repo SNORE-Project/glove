@@ -9,8 +9,7 @@ let time1 = 0;
 let delta_t = 0;
 let time2 = 0;
 let pulse_data = 0;
-let pulse_out = 0;
-let counter = 0;
+let just_registered = false;
 let average = 0;
 
 basic.forever(() => {
@@ -21,10 +20,7 @@ basic.forever(() => {
 /*
 basic.forever(() => {
     serial.writeValue("Pulse Diagram", pulse_data);
-    serial.writeValue("Current Pulse", pulse_out);
     serial.writeValue("Moving Average", average);
-    serial.writeValue("Stable Threshold", stable_peak);
-    serial.writeValue("Running Peak", running_peak);
 });
 */
 
@@ -38,11 +34,12 @@ function motion_magnitude() {
 
 
 basic.forever(() => {
-    if (pulse_data > (average + (average * PEAK_REGISTER_RATIO)) && counter == 0) {
+    if (pulse_data > (average + (average * PEAK_REGISTER_RATIO)) && !just_registered) {
         time2 = input.runningTime();
         delta_t = time2 - time1;
         time1 = time2;
-        pulse_out = Math.floor(60000 / delta_t);
+        let pulse_out = Math.floor(60000 / delta_t);
+        //serial.writeValue("Current Pulse", pulse_out");
         
         // send data to remote
         let motion = motion_magnitude();
@@ -52,8 +49,8 @@ basic.forever(() => {
         radio.sendValue("movement", motion >= MOVEMENT_THRESHOLD ? 1 : 0);
         radio.sendValue("raw_mvmt", motion);
 
-        counter = 1;
-    } else if (pulse_data <= LOWER_BOUND && counter == 1) {
-        counter = 0;
+        just_registered = true;
+    } else if (pulse_data <= LOWER_BOUND && just_registered) {
+        just_registered = false;
     }
 });
