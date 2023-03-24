@@ -12,7 +12,6 @@ let pulse_data = 0;
 let pulse_out = 0;
 let counter = 0;
 let average = 0;
-let motion;
 
 basic.forever(() => {
     pulse_data = pins.analogReadPin(AnalogPin.P0);
@@ -46,7 +45,7 @@ basic.forever(() => {
         pulse_out = Math.floor(60000 / delta_t);
         
         // send data to remote
-        motion = motion_magnitude();
+        let motion = motion_magnitude();
 
         radio.sendValue("pulse", pulse_out);
         radio.sendValue("time", Math.floor(time1 / 60000));
