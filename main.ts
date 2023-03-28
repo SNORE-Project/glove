@@ -5,9 +5,7 @@ const AVERAGE_MULTIPLIER = 0.01;
 
 radio.setGroup(0);
 
-let time1 = 0;
-let delta_t = 0;
-let time2 = 0;
+let last_pulse_time = 0;
 let pulse_data = 0;
 let just_registered = false;
 let average = 0;
@@ -35,9 +33,9 @@ function motion_magnitude() {
 
 basic.forever(() => {
     if (pulse_data > (average + (average * PEAK_REGISTER_RATIO)) && !just_registered) {
-        time2 = input.runningTime();
-        delta_t = time2 - time1;
-        time1 = time2;
+        let current_time = input.runningTime();
+        let delta_t = current_time - last_pulse_time;
+        last_pulse_time = current_time;
         let pulse_out = Math.floor(60000 / delta_t);
         //serial.writeValue("Current Pulse", pulse_out");
         
