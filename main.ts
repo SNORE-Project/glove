@@ -1,5 +1,5 @@
 const LOWER_BOUND = 470;
-const PEAK_REGISTER_RATIO = 0.20;
+const PEAK_REGISTER_RATIO = 1.30;
 const MOVEMENT_THRESHOLD = 70;
 const AVERAGE_MULTIPLIER = 0.01;
 
@@ -32,7 +32,7 @@ function motion_magnitude() {
 
 
 basic.forever(() => {
-    if (pulse_data > (average + (average * PEAK_REGISTER_RATIO)) && !just_registered) {
+    if (pulse_data > average * PEAK_REGISTER_RATIO && !just_registered) {
         let current_time = input.runningTime();
         let delta_t = current_time - last_pulse_time;
         last_pulse_time = current_time;
