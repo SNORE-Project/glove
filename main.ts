@@ -43,8 +43,8 @@ basic.forever(() => {
         let motion = motion_magnitude();
 
         radio.sendValue("pulse", pulse_out);
-        //radio.sendValue("time", Math.floor(time1 / 60000));
-        radio.sendValue("time", time1);
+        //radio.sendValue("time", Math.floor(current_time / 60000));
+        radio.sendValue("time", current_time);
         radio.sendValue("movement", motion >= MOVEMENT_THRESHOLD ? 1 : 0);
         radio.sendValue("raw_mvmt", motion);
 
