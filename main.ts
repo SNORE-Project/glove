@@ -37,7 +37,7 @@ basic.forever(() => {
         let delta_t = current_time - last_pulse_time;
         last_pulse_time = current_time;
         let pulse_out = Math.floor(60000 / delta_t);
-        //serial.writeValue("Current Pulse", pulse_out");
+        //serial.writeValue("Current Pulse", pulse_out);
         
         // send data to remote
         let motion = motion_magnitude();
